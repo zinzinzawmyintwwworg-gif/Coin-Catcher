@@ -1,0 +1,1 @@
+export type { ScoreEntry, ScoreSubmitRequest, LeaderboardResponse } from '@shared/types';

@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coin Catcher</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f4f0ff, #eee7ff);
+    }
+
+    #game-container {
+      position: relative;
+      width: 800px;
+      max-width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: 0 12px 40px rgba(91, 70, 150, 0.15);
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* Username Menu */
+
+    #menu-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      padding: 24px;
+      background: #f7f4ff;
+    }
+
+    #menu-screen.hidden {
+      display: none;
+    }
+
+    .coin-icon {
+      width: 62px;
+      height: 62px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: #fff0c2;
+      color: #d99b18;
+      font-size: 34px;
+      margin-bottom: 4px;
+    }
+
+    #menu-title {
+      font-size: clamp(30px, 6vw, 44px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #6652a5;
+      text-align: center;
+    }
+
+    #menu-subtitle {
+      font-size: 15px;
+      color: #88809e;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .username-label {
+      width: 100%;
+      max-width: 330px;
+      text-align: left;
+      color: #514477;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    #username-input {
+      width: 100%;
+      max-width: 330px;
+      height: 48px;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #514477;
+      background: #ffffff;
+      border: 1.5px solid #ddd4f5;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #username-input:focus {
+      border-color: #7963c8;
+      box-shadow: 0 0 0 3px rgba(121, 99, 200, 0.12);
+    }
+
+    #username-input::placeholder {
+      color: #b5aec8;
+    }
+
+    #start-btn {
+      width: 100%;
+      max-width: 330px;
+      height: 48px;
+      margin-top: 8px;
+      color: #ffffff;
+      background: #7963c8;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    #start-btn:hover {
+      background: #6652ae;
+      transform: translateY(-2px);
+    }
+
+    #start-btn:active {
+      transform: translateY(0);
+    }
+
+    #error-text {
+      min-height: 20px;
+      font-size: 13px;
+      color: #dc626b;
+      text-align: center;
+    }
+
+    @media (max-width: 500px) {
+      #menu-title {
+        font-size: 30px;
+      }
+
+      #menu-subtitle {
+        font-size: 13px;
+      }
+
+      #menu-screen {
+        gap: 10px;
+      }
+    }
+    #auth-screen {
+  width: 100%;
+  max-width: 330px;
+}
+
+#login-form,
+#register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#login-form h2,
+#register-form h2 {
+  color: #6652a5;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+#login-form input,
+#register-form input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid #ddd4f5;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+#login-form input:focus,
+#register-form input:focus {
+  border-color: #7963c8;
+}
+
+.menu-button {
+  height: 46px;
+  margin-top: 8px;
+  color: white;
+  background: #7963c8;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background: #6652ae;
+}
+
+.switch-text {
+  text-align: center;
+  color: #88809e;
+  font-size: 13px;
+}
+
+.text-button {
+  border: none;
+  background: none;
+  color: #7963c8;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+#main-menu {
+  width: 100%;
+  max-width: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+#welcome-text {
+  color: #6652a5;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#main-menu button {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+#play-game-btn {
+  color: white;
+  background: #7963c8;
+}
+
+#main-leaderboard-btn {
+  color: #6652a5;
+  background: #e9e3fa;
+}
+
+#logout-btn {
+  color: #dc626b;
+  background: #fff0f0;
+}
+
+#main-menu button:hover {
+  transform: translateY(-2px);
+}
+/* ===== MODERN ARCADE LEADERBOARD ===== */
+
+#leaderboard-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 35px;
+  background: linear-gradient(145deg, #17142c, #252044);
+  color: #ffffff;
+  overflow-y: auto;
+}
+
+#leaderboard-screen.hidden {
+  display: none;
+}
+
+.leaderboard-title {
+  color: #f0c85a;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+
+.leaderboard-subtitle {
+  color: #aaa0cb;
+  font-size: 12px;
+  letter-spacing: 3px;
+  margin-top: 5px;
+}
+
+.leaderboard-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin: 24px 0 18px;
+}
+
+.filter-btn {
+  flex: 1;
+  max-width: 120px;
+  padding: 10px 8px;
+  border: 1px solid #514477;
+  border-radius: 9px;
+  background: #30294d;
+  color: #c8c1df;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.filter-btn:hover {
+  background: #514477;
+}
+
+.filter-btn.active {
+  background: #e5bd55;
+  color: #211d3b;
+  border-color: #e5bd55;
+}
+
+#main-leaderboard-list {
+  width: 100%;
+  max-width: 570px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboard-row {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  border: 1px solid #514477;
+  border-radius: 12px;
+  background: #30294d;
+}
+
+.leaderboard-rank {
+  width: 32px;
+  color: #e5bd55;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.leaderboard-username {
+  flex: 1;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leaderboard-score {
+  color: #f0c85a;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.leaderboard-empty {
+  padding: 30px 10px;
+  color: #aaa0cb;
+  text-align: center;
+  font-size: 15px;
+}
+
+#close-leaderboard-btn {
+  width: 180px;
+  margin-top: 22px;
+  background: #514477;
+  color: #ffffff;
+}
+
+#close-leaderboard-btn:hover {
+  background: #6652ae;
+}
+
+@media (max-width: 500px) {
+  #leaderboard-screen {
+    padding: 20px 14px;
+  }
+
+  .leaderboard-title {
+    font-size: 25px;
+  }
+
+  .leaderboard-filters {
+    gap: 5px;
+  }
+
+  .filter-btn {
+    padding: 9px 4px;
+    font-size: 10px;
+  }
+}
+  </style>
+</head>
+
+<body>
+ <div id="menu-screen">
+  <div class="coin-icon">★</div>
+
+  <h1 id="menu-title">COIN CATCHER</h1>
+  <p id="menu-subtitle">Catch coins and have fun!</p>
+
+  <div id="auth-screen">
+    <div id="login-form">
+      <h2>Login</h2>
+
+      <label class="username-label" for="login-username">Username</label>
+      <input id="login-username" type="text" maxlength="20"
+        placeholder="Enter your username" />
+
+      <label class="username-label" for="login-password">Password</label>
+      <input id="login-password" type="password"
+        placeholder="Enter your password" />
+
+      <button id="login-btn" class="menu-button">LOGIN</button>
+
+      <p class="switch-text">
+        Don't have an account?
+        <button id="show-register-btn" class="text-button">Register</button>
+      </p>
+    </div>
+
+    <div id="register-form" class="hidden">
+      <h2>Create Account</h2>
+
+      <label class="username-label" for="register-username">Username</label>
+      <input id="register-username" type="text" maxlength="20"
+        placeholder="3–20 characters" />
+
+      <label class="username-label" for="register-password">Password</label>
+      <input id="register-password" type="password"
+        placeholder="At least 8 characters" />
+
+      <button id="register-btn" class="menu-button">REGISTER</button>
+
+      <p class="switch-text">
+        Already have an account?
+        <button id="show-login-btn" class="text-button">Login</button>
+      </p>
+    </div>
+  </div>
+<div id="main-menu" class="hidden">
+  <h2 id="welcome-text">Welcome!</h2>
+
+  <h3>CHOOSE DIFFICULTY</h3>
+
+  <div id="difficulty-options">
+    <button id="easy-difficulty-btn" type="button">
+      EASY
+    </button>
+
+    <button id="normal-difficulty-btn" type="button">
+      NORMAL
+    </button>
+
+    <button id="hard-difficulty-btn" type="button">
+      HARD
+    </button>
+  </div>
+
+  <p id="selected-difficulty">
+    Selected: NORMAL
+  </p>
+
+  <button id="play-game-btn">PLAY GAME</button>
+  <button id="main-leaderboard-btn">LEADERBOARD</button>
+  <button id="logout-btn">LOGOUT</button>
+</div>
+
+<div id="leaderboard-screen" class="hidden">
+
+  <h2 class="leaderboard-title">🏆 LEADERBOARD</h2>
+  <p class="leaderboard-subtitle">TOP 5 PLAYERS</p>
+
+  <div class="leaderboard-filters">
+    <button class="filter-btn active" data-difficulty="all">ALL</button>
+    <button class="filter-btn" data-difficulty="easy">EASY</button>
+    <button class="filter-btn" data-difficulty="normal">NORMAL</button>
+    <button class="filter-btn" data-difficulty="hard">HARD</button>
+  </div>
+
+  <div id="main-leaderboard-list">
+    Loading...
+  </div>
+
+  <button id="close-leaderboard-btn" class="menu-button">
+    BACK
+  </button>
+
+</div>
+  <div id="error-text"></div>
+</div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
