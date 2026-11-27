@@ -1,5 +1,6 @@
 
 import Phaser from 'phaser';
+import { API_URL } from '../config';
 
 interface GameOverSceneData {
   username: string;
@@ -193,7 +194,7 @@ accent.fillRoundedRect(280, 35, 240, 6, 3);
     }).setOrigin(0.5);
 
     try {
-      const response = await fetch('http://localhost:3000/api/scores', {
+      const response = await fetch(`${API_URL}/scores`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

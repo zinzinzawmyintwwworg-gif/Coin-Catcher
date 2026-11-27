@@ -4,6 +4,7 @@ import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { GameScene } from './scenes/GameScene';
 import { GameOverScene } from './scenes/GameOverScene';
+import { API_URL } from './config';
 
 const menuScreen = document.getElementById('menu-screen')!;
 const authScreen = document.getElementById('auth-screen')!;
@@ -33,8 +34,6 @@ const registerBtn = document.getElementById('register-btn') as HTMLButtonElement
 const showRegisterBtn = document.getElementById('show-register-btn')!;
 const showLoginBtn = document.getElementById('show-login-btn')!;
 const errorText = document.getElementById('error-text')!;
-
-const API_URL = 'http://localhost:3000/api';
 
 function showLogin(): void {
   menuScreen.classList.remove('hidden');
